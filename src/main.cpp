@@ -5,10 +5,7 @@ extern "C"
 };
 
 
-#include <stdio.h>
-#include <highgui.h>
-#include <cv.h>
-#include <math.h>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include "IO.h"
 #include "LineMatching.h"
@@ -22,9 +19,11 @@ using namespace cv;
 
 void detectLine(char* imfile, Mat &mLines, float minLineLength)
 {
-	IplImage* im = cvLoadImage(imfile,CV_LOAD_IMAGE_GRAYSCALE);
-	image_double image = new_image_double(im->width, im->height);
-	unsigned char* im_src = (unsigned char*)im->imageData;
+    cv::Mat im_ = cv::imread(imfile, cv::IMREAD_GRAYSCALE);
+//    im_.convertTo(im_, CV_64FC1);
+    cv::Mat * im = &im_;
+	image_double image = new_image_double(im->cols, im->rows);
+	unsigned char* im_src = (unsigned char*) im->data;
 	int xsize = image->xsize;
 	int ysize = image->ysize;
 	int y,x;
@@ -32,7 +31,7 @@ void detectLine(char* imfile, Mat &mLines, float minLineLength)
 	{
 		for (x = 0;x < xsize;x++)
 		{
-			image->data[y * xsize + x] = im_src[y * im->widthStep + x];
+			image->data[y * xsize + x] = im_src[y * im->step + x];
 		}
 	}
 	ntuple_list detected_lines = lsd(image);
@@ -79,7 +78,7 @@ void drawDectectedLine(Mat Img, Mat mLines, string imgName )
 		
 		Point2f spt1 = Point2f( pdat[0], pdat[1]);
 		Point2f ept1 = Point2f( pdat[2], pdat[3] ); 
-		line(Img, spt1, ept1, cvScalar(R,G,B), 2 );		
+		line(Img, spt1, ept1, CV_RGB(R,G,B), 2 );
 	}	
 
 	imshow(imgName, Img);
@@ -108,7 +107,7 @@ void drawPartiallyConnectedLine(Mat Img, Mat mLines, string imgName, Mat fans)
 
 		Point2f spt1 = Point2f( pdat[0], pdat[1] );
 		Point2f ept1 = Point2f( pdat[2], pdat[3] ); 
-		line(Img, spt1, ept1, cvScalar(R,G,B), 2 );		
+		line(Img, spt1, ept1, CV_RGB(R,G,B), 2 );
 	}	
 	int nFan = fans.rows;
 	for (int i = 0; i < nFan; i++ )
@@ -118,7 +117,7 @@ void drawPartiallyConnectedLine(Mat Img, Mat mLines, string imgName, Mat fans)
 		int G=color[color_num][1];
 		int B=color[color_num][2];
 		float *pdat = fans.ptr<float>(i);
-		circle(Img, Point2f(pdat[0], pdat[1]), 5, cvScalar(R,G,B), -1);
+		circle(Img, Point2f(pdat[0], pdat[1]), 5, CV_RGB(R,G,B), -1);
 	}
 	imshow(imgName, Img);
 	waitKey(20);	
@@ -199,9 +198,9 @@ int main(int argc, char** argv)
    Mat colorImg1= imread(imgName1, 3);    
    Mat colorImg2= imread(imgName2, 3);    
    Mat img1, img2;
-   cvtColor(colorImg1, img1, CV_RGB2GRAY);
+   cvtColor(colorImg1, img1, cv::COLOR_RGB2GRAY);
    img1.convertTo(img1, CV_32FC1);
-   cvtColor(colorImg2, img2, CV_RGB2GRAY);
+   cvtColor(colorImg2, img2, cv::COLOR_RGB2GRAY);
    img2.convertTo(img2, CV_32FC1);
 
    Mat nodes1, nodes2, lines1, lines2;

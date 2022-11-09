@@ -37,7 +37,7 @@ CPartiallyRecoverConnectivity::CPartiallyRecoverConnectivity(Mat mLines, float r
 		float degAng = fastAtan2(dy, dx);
 		float arcAng  = degAng / 180 * CV_PI;		
 		float length = abs(tan(arcAng)) > 1 ? abs(dy) : abs(dx);		
-		CvSize tsize;
+		cv::Size tsize;
 		tsize.height = radius * 2;
 		tsize.width  = length + 2 * radius;
 		rotRect = RotatedRect(cenpt, tsize, degAng);

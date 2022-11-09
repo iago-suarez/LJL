@@ -291,7 +291,7 @@ void CLineMatching::descriptorEvaluationUniquePtMatches()
 void CLineMatching::lineMatches2Mat(Mat &mline)
 {
 	string fileName = _outFileName;
-	ofstream outFile(fileName.c_str(), ios_base::out);  //°´ÐÂ½¨»ò¸²¸Ç·½Ê½Ð´Èë  	
+	ofstream outFile(fileName.c_str(), ios_base::out);  //???½?????????  	
 
 	vector<int> vser;
 	int nmatch = vstrLineMatch.size();	
@@ -305,7 +305,7 @@ void CLineMatching::lineMatches2Mat(Mat &mline)
 			strline2[ser2].pe.x, strline2[ser2].pe.y);
 		mline.push_back(tmat);
 		vser.push_back(ser1);
-		//	outFile<< ser1 << ' ' << ser2 <<endl;   //Ã¿ÁÐÊý¾ÝÓÃ tab ¸ô¿ª  			
+		//	outFile<< ser1 << ' ' << ser2 <<endl;   //ÿ???????? tab ????  			
 	}		
 	vector<int> vsidex;
 	sortIdx(vser, vsidex, SORT_EVERY_ROW);
@@ -315,7 +315,7 @@ void CLineMatching::lineMatches2Mat(Mat &mline)
 		int ser = vsidex.at(i);
 		int ser1 = vstrLineMatch[ser].serLine1;		
 		int ser2 = vstrLineMatch[ser].serLine2;		
-		outFile<< ser1 << ' ' << ser2 <<endl;   //Ã¿ÁÐÊý¾ÝÓÃ tab ¸ô¿ª  			
+		outFile<< ser1 << ' ' << ser2 <<endl;   //ÿ???????? tab ????  			
 	}
 }
 
@@ -1137,8 +1137,8 @@ void CLineMatching::matchSingleLines(float desDistThr, float fDistThr)
 					continue;
 
 				Mat sortedIdx, sortedDist;
-				sortIdx(mDesDist, sortedIdx, CV_SORT_EVERY_COLUMN);
-				cv::sort(mDesDist, sortedDist, CV_SORT_EVERY_COLUMN);
+				sortIdx(mDesDist, sortedIdx, cv::SORT_EVERY_COLUMN);
+				cv::sort(mDesDist, sortedDist, cv::SORT_EVERY_COLUMN);
 
 				strLineMatch tstrLineMatch;					
 				tstrLineMatch.serLine1 = curLine1.serial;
@@ -1558,7 +1558,7 @@ void CLineMatching::nearestMatchedPointsToLine(vector<strLine> vUnmatchedLines, 
 			dists2line.push_back(tdist);
 		}
 		Mat sortedIdx1;	 
-		sortIdx(dists2line.t(), sortedIdx1, CV_SORT_EVERY_ROW);	
+		sortIdx(dists2line.t(), sortedIdx1, cv::SORT_EVERY_ROW);
 		int* pSortedIdx = sortedIdx1.ptr<int>(0);
 		for (int j = 0; j < nNeighborMPts; j++)
 		{
@@ -2237,7 +2237,7 @@ void CLineMatching::uniquePointMatch(vector<strPointMatch> &vStrPointMatch)
 	int rows = pointMatch.rows;	
 	Mat dist2Ori1 = pointMatch.col(0).mul(pointMatch.col(0)) + pointMatch.col(1).mul(pointMatch.col(1));	
 	Mat tmat1, sortedIdx1;
-	sortIdx(dist2Ori1,  sortedIdx1, CV_SORT_EVERY_COLUMN);							
+	sortIdx(dist2Ori1,  sortedIdx1, cv::SORT_EVERY_COLUMN);
 	for (int i = 0; i < rows; i++)
 	{
 		int *pSer = sortedIdx1.ptr<int>(0);
@@ -2265,7 +2265,7 @@ void CLineMatching::uniquePointMatch(vector<strPointMatch> &vStrPointMatch)
 
 	Mat tmat3, sortedIdx2;
 	Mat dist2Ori2 = tmat2.col(2).mul(tmat2.col(2)) + tmat2.col(3).mul(tmat2.col(3));		
-	sortIdx(dist2Ori2,  sortedIdx2, CV_SORT_EVERY_COLUMN);						
+	sortIdx(dist2Ori2,  sortedIdx2, cv::SORT_EVERY_COLUMN);
 	rows = tmat2.rows;
 	for (int i = 0; i < rows; i++)
 	{
@@ -2511,7 +2511,7 @@ void CLineMatching::sortrows(Mat inMat, Mat &outMat, Mat &sortedComIdx, int prim
 	Mat primColumn = inMat.col(primiaryKey).clone();
 	Mat secColumn = inMat.col(secondaryKey).clone();
 	Mat comCol = 100*primColumn + 0.01*secColumn;
-	sortIdx(comCol,  sortedComIdx, CV_SORT_EVERY_COLUMN);		
+	sortIdx(comCol,  sortedComIdx, cv::SORT_EVERY_COLUMN);
 	outMat = Mat(inMat.size(), inMat.type());
 	int nrows = outMat.rows;
 	for (int i = 0; i < nrows; i++)
@@ -2547,14 +2547,14 @@ void CLineMatching::plotLineMatches(Mat img1, Mat img2, vector<strLineMatch> vSt
 		int ser1 = vStrLineMatch[i].serLine1;		
 		Point2f spt1 = strline1[ser1].ps;
 		Point2f ept1 = strline1[ser1].pe; 
-		line(combinedImg, spt1, ept1, cvScalar(R,G,B), 2 );
+		line(combinedImg, spt1, ept1, CV_RGB(R,G,B), 2 );
 
 		int ser2 = vStrLineMatch[i].serLine2;		
 		Point2f spt2 = strline2[ser2].ps;
 		spt2.x += cols1;
 		Point2f ept2 = strline2[ser2].pe;
 		ept2.x += cols1;
-		line(combinedImg, spt2, ept2, cvScalar(R,G,B), 2 );
+		line(combinedImg, spt2, ept2, CV_RGB(R,G,B), 2 );
 		stringstream ss;		
 		string str;
 		ss<<i;
@@ -2563,11 +2563,11 @@ void CLineMatching::plotLineMatches(Mat img1, Mat img2, vector<strLineMatch> vSt
 		tpt = spt1 + ept1;
 		midpt1.x = (int) tpt.x/2;
 		midpt1.y = (int) tpt.y/2;		
-		putText(combinedImg, str, midpt1, FONT_HERSHEY_SIMPLEX, 0.5, cvScalar(R,G,B), 1);
+		putText(combinedImg, str, midpt1, FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(R,G,B), 1);
 		tpt = spt2 + ept2;
 		midpt2.x = (int) tpt.x/2;
 		midpt2.y = (int) tpt.y/2;		
-		putText(combinedImg, str, midpt2, FONT_HERSHEY_SIMPLEX, 0.5, cvScalar(R,G,B), 1);		
+		putText(combinedImg, str, midpt2, FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(R,G,B), 1);		
 	}	
 
 	imshow(imgName, combinedImg);
@@ -2656,13 +2656,13 @@ void CLineMatching::get_asift_description(Mat img, Mat pts, vector<Mat> &vDes)
 			A = A.t();
 			A.push_back(tmpB);				
 			A = A.t();						
-			warpAffine(ttransImg, ttransImg, A, cvSize(bRect.width, bRect.height), CV_INTER_LINEAR, BORDER_REPLICATE);			
+			warpAffine(ttransImg, ttransImg, A, cv::Size(bRect.width, bRect.height), cv::INTER_LINEAR, BORDER_REPLICATE);
 		}
 		if (tilt != 1.0)
 		{
 			float s = 1.0*sqrtf(tilt * tilt);			
-			GaussianBlur(ttransImg, ttransImg, cvSize(0, 0), s, 0.01);
-			resize(ttransImg, ttransImg, cvSize(0, 0), 1.0, 1.0/tilt, INTER_NEAREST);
+			GaussianBlur(ttransImg, ttransImg, cv::Size(0, 0), s, 0.01);
+			resize(ttransImg, ttransImg, cv::Size(0, 0), 1.0, 1.0/tilt, INTER_NEAREST);
 			A.row(1) /= tilt;
 		}
 		Mat ttransPts = A * pts;
@@ -2786,13 +2786,13 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 			A = A.t();
 			A.push_back(tmpB);				
 			A = A.t();						
-			warpAffine(ttransImg, ttransImg, A, cvSize(bRect.width, bRect.height), CV_INTER_LINEAR, BORDER_REPLICATE);			
+			warpAffine(ttransImg, ttransImg, A, cv::Size(bRect.width, bRect.height), cv::INTER_LINEAR, BORDER_REPLICATE);
 		}
 		if (tilt != 0)
 		{
 			float s = 0.8*sqrtf(tilt * tilt-1);			
-			GaussianBlur(ttransImg, ttransImg, cvSize(0, 0), s, 0.01);
-			resize(ttransImg, ttransImg, cvSize(0, 0), 1.0, 1.0/tilt, INTER_NEAREST);
+			GaussianBlur(ttransImg, ttransImg, cv::Size(0, 0), s, 0.01);
+			resize(ttransImg, ttransImg, cv::Size(0, 0), 1.0, 1.0/tilt, INTER_NEAREST);
 			A.row(1) /= tilt;
 		}
 		Mat ttransPts = A * transPts;
@@ -2837,7 +2837,7 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 			Point2f pt2 = Point2f(pdat2[0], pdat2[1]);
 			float *pdat3 = drawttransPts.ptr<float>(j+2*npts);
 			Point2f pt3 = Point2f(pdat3[0], pdat3[1]);
-			circle(ttransImg, pt1, 5, cvScalar(0, 0, 0), -1);
+			circle(ttransImg, pt1, 5, CV_RGB(0, 0, 0), -1);
 		}
 		imwrite(str, ttransImg); 	
 		imshow(str, ttransImg);
@@ -2881,7 +2881,7 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 		A.push_back(tmpB);				
 		A = A.t();
 		Mat ttransImg;
-		warpAffine(transImg, ttransImg, A, cvSize(cols, rows), CV_INTER_LINEAR, BORDER_REPLICATE);			
+		warpAffine(transImg, ttransImg, A, cv::Size(cols, rows), CV_INTER_LINEAR, BORDER_REPLICATE);			
 
 		imshow("1.jpg", ttransImg);
 		waitKey();
@@ -2893,8 +2893,8 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 		{						
 			float s = 0.8*sqrtf(tilt * tilt-1);
 			Mat tttransImg;
-			GaussianBlur(ttransImg, tttransImg, cvSize(0, 0), s, 0.01);
-			resize(tttransImg, tttransImg, cvSize(0, 0), 1.0/tilt, 1.0, INTER_NEAREST);
+			GaussianBlur(ttransImg, tttransImg, cv::Size(0, 0), s, 0.01);
+			resize(tttransImg, tttransImg, cv::Size(0, 0), 1.0/tilt, 1.0, INTER_NEAREST);
 
 			imshow("2.jpg", tttransImg);
 			waitKey();
@@ -2931,9 +2931,9 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 				Point2f intersection = vOriFan[i].intsection;
 				Point2f branch1      = vOriFan[i].strbranch1.bpt;
 				Point2f branch2      = vOriFan[i].strbranch2.bpt;
-				circle(showImg1, intersection, 5, cvScalar(255, 255, 255), -1);
-				line(showImg1, intersection, branch1, cvScalar(255,255,255), 2);		
-				line(showImg1, intersection, branch2, cvScalar(255,255,255), 2);		
+				circle(showImg1, intersection, 5, CV_RGB(255, 255, 255), -1);
+				line(showImg1, intersection, branch1, CV_RGB(255,255,255), 2);		
+				line(showImg1, intersection, branch2, CV_RGB(255,255,255), 2);		
 			}
 			imshow("showImg1.jpg", showImg1);	
 			waitKey();	
@@ -2944,9 +2944,9 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 				Point2f intersection = tvPyrFans[i].intsection;
 				Point2f branch1      = tvPyrFans[i].strbranch1.bpt;
 				Point2f branch2      = tvPyrFans[i].strbranch2.bpt;
-				circle(showImg2, intersection, 5, cvScalar(255, 255, 255), -1);
-				line(showImg2, intersection, branch1, cvScalar(255,255,255), 2);		
-				line(showImg2, intersection, branch2, cvScalar(255,255,255), 2);		
+				circle(showImg2, intersection, 5, CV_RGB(255, 255, 255), -1);
+				line(showImg2, intersection, branch1, CV_RGB(255,255,255), 2);		
+				line(showImg2, intersection, branch2, CV_RGB(255,255,255), 2);		
 			}
 			imshow("showImg2.jpg", showImg2);					
 			waitKey();	
@@ -2977,9 +2977,9 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 					Point2f intersection = vOriFan[i].intsection;
 					Point2f branch1      = vOriFan[i].strbranch1.bpt;
 					Point2f branch2      = vOriFan[i].strbranch2.bpt;
-					circle(showImg1, intersection, 5, cvScalar(255, 255, 255), -1);
-					line(showImg1, intersection, branch1, cvScalar(255,255,255), 2);		
-					line(showImg1, intersection, branch2, cvScalar(255,255,255), 2);		
+					circle(showImg1, intersection, 5, CV_RGB(255, 255, 255), -1);
+					line(showImg1, intersection, branch1, CV_RGB(255,255,255), 2);		
+					line(showImg1, intersection, branch2, CV_RGB(255,255,255), 2);		
 				}
 				imshow("showImg1.jpg", showImg1);	
 				waitKey();	
@@ -2990,9 +2990,9 @@ void CLineMatching::matchAffineSequence(Mat oriImg, vector<strFanSection> oriFan
 					Point2f intersection = tvPyrFans[i].intsection;
 					Point2f branch1      = tvPyrFans[i].strbranch1.bpt;
 					Point2f branch2      = tvPyrFans[i].strbranch2.bpt;
-					circle(showImg2, intersection, 5, cvScalar(255, 255, 255), -1);
-					line(showImg2, intersection, branch1, cvScalar(255,255,255), 2);		
-					line(showImg2, intersection, branch2, cvScalar(255,255,255), 2);		
+					circle(showImg2, intersection, 5, CV_RGB(255, 255, 255), -1);
+					line(showImg2, intersection, branch1, CV_RGB(255,255,255), 2);		
+					line(showImg2, intersection, branch2, CV_RGB(255,255,255), 2);		
 				}
 				imshow("showImg2.jpg", showImg2);					
 				waitKey();	
@@ -3129,7 +3129,7 @@ void CLineMatching::affineTransformEstimation(Mat &img1, Mat &node1, strLine* st
 					*/
 				}
 			}			
-			cv::sort(vDist, vDist, CV_SORT_EVERY_ROW);	
+			cv::sort(vDist, vDist, cv::SORT_EVERY_ROW);
 			float tdist = 0;
 			for (int m = 0; m < ncand; m++)
 			{
@@ -3211,8 +3211,8 @@ void CLineMatching::affineTransformEstimation(Mat &img1, Mat &node1, strLine* st
 			strline2[j].ps.x = pdat[1];
 			strline2[j].ps.y = pdat[3];				
 		}				
-	    warpAffine(img2, img2, maxTransMat1, cvSize(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
-		warpAffine(colorImg2, colorImg2, maxTransMat1, cvSize(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
+	    warpAffine(img2, img2, maxTransMat1, cv::Size(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
+		warpAffine(colorImg2, colorImg2, maxTransMat1, cv::Size(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
 
  		vFanMatch = vMaxMatches1;
  		gdir2 = maxGDir1;
@@ -3234,8 +3234,8 @@ void CLineMatching::affineTransformEstimation(Mat &img1, Mat &node1, strLine* st
 			strline1[j].ps.y = pdat[3];				
 		}		
 
-		warpAffine(img1, img1, maxTransMat2, cvSize(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
-		warpAffine(colorImg1, colorImg1, maxTransMat2, cvSize(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
+		warpAffine(img1, img1, maxTransMat2, cv::Size(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
+		warpAffine(colorImg1, colorImg1, maxTransMat2, cv::Size(0, 0), CV_INTER_LINEAR, BORDER_REPLICATE);	
 
 		int nfan = vMaxMatches2.size();	
 		vFanMatch = vMaxMatches2;
@@ -3267,7 +3267,7 @@ float CLineMatching::descriptorDistance(Mat des1, Mat des2, int ncand)
 			vDist.push_back(tdist);					
 		}
 	}			
-	cv::sort(vDist, vDist, CV_SORT_EVERY_ROW);	
+	cv::sort(vDist, vDist, cv::SORT_EVERY_ROW);
 	float tdist = 0;
 	for (int m = 0; m < ncand; m++)
 	{
@@ -3361,7 +3361,7 @@ void CLineMatching::description(vector<strFanSection> &vstrFanSection,  Mat gMag
 	for (int i = 0; i < nfan; i++)
 	{
 		mDes.release();
-		float angs[2] = { vstrFanSection[i].strbranch1.ang, vstrFanSection[i].strbranch2.ang };
+		float angs[2] = { float(vstrFanSection[i].strbranch1.ang), float(vstrFanSection[i].strbranch2.ang) };
 		Vec3f pt;
 		pt[0] = vstrFanSection[i].intsection.x;
 		pt[1] = vstrFanSection[i].intsection.y;
@@ -3384,7 +3384,7 @@ void CLineMatching::description(vector<strFanSection> &vstrFanSection,  Mat gMag
 	for (int i = 0; i < nfan; i++)
 	{
 		mDes.release();
-		float angs[2] = { vstrFanSection[i].strbranch1.ang, vstrFanSection[i].strbranch2.ang };
+		float angs[2] = { float(vstrFanSection[i].strbranch1.ang), float(vstrFanSection[i].strbranch2.ang) };
 		Vec3f pt;
 		pt[0] = vstrFanSection[i].intsection.x;
 		pt[1] = vstrFanSection[i].intsection.y;
@@ -3655,7 +3655,7 @@ void CLineMatching::description_sift(vector<strFanSection> &vstrFanSection,  Mat
 	int nfan = vstrFanSection.size();
 	for (int i = 0; i < nfan; i++)
 	{		
-		float angs[2] = {vstrFanSection[i].strbranch1.ang, vstrFanSection[i].strbranch2.ang };
+		float angs[2] = {float(vstrFanSection[i].strbranch1.ang), float(vstrFanSection[i].strbranch2.ang) };
 		Vec3f pt;
 		pt[0] = vstrFanSection[i].intsection.x;
 		pt[1] = vstrFanSection[i].intsection.y;
@@ -4128,7 +4128,7 @@ void CLineMatching::initialize_providedJunctions(Mat img, strLine* strline, int 
 void CLineMatching::intensityDirection(Mat oriImg,  strLine* strline, int nline)
 {
 	int regionWidth = _intensityProfileWidth;
-	CvSize imgSize = oriImg.size();
+	cv::Size imgSize = oriImg.size();
 	Mat img = oriImg.clone();
  // edianBlur ( img, img, 3);
 	
@@ -4222,16 +4222,7 @@ void CLineMatching::plotPointMatches(Mat colorImg1, Mat colorImg2, vector<strPoi
 
 void CLineMatching::concatenateTwoImgs(Mat mImg1, Mat mImg2, Mat &outImg)
 {
-	IplImage img1= IplImage(mImg1); 
-	IplImage img2= IplImage(mImg2);
-	IplImage* stacked = cvCreateImage( cvSize( img1.width + img2.width, max(img1.height, img2.height)), IPL_DEPTH_8U, img1.nChannels); 
-	cvSetImageROI( stacked, cvRect( 0, 0, img1.width, img1.height ) ); 
-	cvCopy(&img1, stacked);//, stacked, NULL ); 
-	cvResetImageROI(stacked); 
-	cvSetImageROI( stacked, cvRect(img1.width, 0, img2.width, img2.height) ); 
-	cvCopy(&img2, stacked);//, stacked, NULL ); 
-	cvResetImageROI(stacked); 
-	outImg = Mat(stacked,0);
+  cv::hconcat(mImg1, mImg2, outImg);
 }
 
 void CLineMatching::getPointsonPolarline(vector<Point2f> &PointSet1,vector<Point2f> &PointSet2, Mat_<double> F, double T, bool *pbIsKept)
@@ -4283,19 +4274,19 @@ void CLineMatching::getResiduauls(Mat  pts1, Mat pts2, Mat FMat, Mat_<float> &re
    	Mat Lp2;
 	Lp2 = FMat * transPts1;   
 	Mat tmat1, tmat2, tmat3, tmat4;
-	reduce( transPts2.mul(Lp2), tmat1, 0, CV_REDUCE_SUM);
+	reduce( transPts2.mul(Lp2), tmat1, 0, cv::REDUCE_SUM);
 	tmat1 = abs(tmat1);
 	pow( Lp2.rowRange(0,2), 2, tmat2);
-	reduce( tmat2, tmat3, 0, CV_REDUCE_SUM);
+	reduce( tmat2, tmat3, 0, cv::REDUCE_SUM);
 	sqrt(tmat3, tmat4);
 	Mat dist1, dist2;
 	divide(tmat1, tmat4, dist1);
 
 	Lp2 = FMat.t() * transPts2;   
-	reduce( transPts1.mul(Lp2), tmat1, 0, CV_REDUCE_SUM);
+	reduce( transPts1.mul(Lp2), tmat1, 0, cv::REDUCE_SUM);
 	tmat1 = abs(tmat1);
 	pow( Lp2.rowRange(0,2), 2, tmat2);
-	reduce( tmat2, tmat3, 0, CV_REDUCE_SUM);
+	reduce( tmat2, tmat3, 0, cv::REDUCE_SUM);
 	sqrt(tmat3, tmat4);
 	divide(tmat1, tmat4, dist2);
 	cout<<dist2<<endl;
@@ -4307,7 +4298,7 @@ void CLineMatching::findRobustFundamentalMat(vector<Point2f> &PointSet1,vector<P
 {
 	unsigned i;
 	vector<uchar> status;
-	findFundamentalMat(PointSet1,PointSet2,CV_RANSAC, _fmatThr, 0.99, status);
+	findFundamentalMat(PointSet1,PointSet2,cv::RANSAC, _fmatThr, 0.99, status);
 	int time = 0;
 	vector<Point2f> goodPoints1,goodPoints2;
 	for (i = 0; i < status.size(); i ++)
@@ -4318,9 +4309,9 @@ void CLineMatching::findRobustFundamentalMat(vector<Point2f> &PointSet1,vector<P
 			goodPoints2.push_back(PointSet2[i]);
 		}
 	}
-	Mat F = findFundamentalMat(goodPoints1, goodPoints2,CV_LMEDS, _fmatThr, 0.99, status);
+	Mat F = findFundamentalMat(goodPoints1, goodPoints2,cv::LMEDS, _fmatThr, 0.99, status);
 	getPointsonPolarline(PointSet1, PointSet2, F, _fmatThr, pbIsKept);
-	FMat = findFundamentalMat(PointSet1, PointSet2,CV_LMEDS, _fmatThr, 0.99, status);
+	FMat = findFundamentalMat(PointSet1, PointSet2,cv::LMEDS, _fmatThr, 0.99, status);
 	FMat.convertTo(FMat, CV_32F);
 }
 

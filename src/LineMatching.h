@@ -1,7 +1,6 @@
 #ifndef	 LINEMATCHING_H
 #define LINEMATCHING_H
-#include "cv.h"
-#include <highgui.h>
+#include <opencv2/opencv.hpp>
 #include "Timer.h"
 #include <vector>
 using namespace cv;

@@ -1,7 +1,7 @@
 #ifndef PARTIALLYRECOVERCONNECTIVITY_H
 #define PARTIALLYRECOVERCONNECTIVITY_H
-#include <cv.h>
-#include <highgui.h>
+#include <opencv2/opencv.hpp>
+
 using namespace cv;
 using namespace std;
 class CPartiallyRecoverConnectivity

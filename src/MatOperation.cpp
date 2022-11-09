@@ -133,7 +133,7 @@ void CMatOperation::sortrows(Mat inMat, Mat &outMat, Mat &sortedComIdx, int prim
 	Mat primColumn = inMat.col(primiaryKey).clone();
 	Mat secColumn = inMat.col(secondaryKey).clone();
 	Mat comCol = primColumn + 0.01*secColumn;	
-	sortIdx(comCol,  sortedComIdx, CV_SORT_EVERY_COLUMN);		
+	sortIdx(comCol,  sortedComIdx, cv::SORT_EVERY_COLUMN);
 
 	outMat = Mat(inMat.size(), inMat.type());
 	int nrows = outMat.rows;
@@ -317,7 +317,7 @@ void CMatOperation::diffSet(Mat src1, Mat src2, Mat &dst)
 
 void CMatOperation::eraseRows(Mat src, Mat eRows, Mat dst)
 {
-	cv::sort(eRows, eRows, CV_SORT_EVERY_ROW);
+	cv::sort(eRows, eRows, cv::SORT_EVERY_ROW);
 	int nerows = eRows.cols;
 	int *pdat = eRows.ptr<int>(0);
 	int num = 0;
